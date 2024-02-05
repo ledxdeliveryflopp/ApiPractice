@@ -1,0 +1,29 @@
+version: "0.1"
+
+services:
+
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+    - database:/var/lib/database/
+    ports:
+    - "5432:5432"
+
+
+  user:
+    build:
+      ./user
+    links:
+      - database
+    command: uvicorn main:user --host 0.0.0.0 --port 7000
+    ports:
+      - "7000:7000"
+
+
+volumes:
+  database:
