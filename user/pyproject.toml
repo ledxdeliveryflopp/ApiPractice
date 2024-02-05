@@ -15,6 +15,7 @@ fastapi = "^0.109.2"
 uvicorn = "^0.27.0.post1"
 alembic = "^1.13.1"
 email-validator = "^2.1.0.post1"
+passlib = "^1.7.4"
 
 
 [build-system]
