@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from crud.user_crud import get_all_user, create_user, update_user, get_user_by_email
-from database.database import async_session
 from schemas.user_schemas import UserBaseSchemas, UserCreateSchemas, UserUpdateSchemas
+from user_database.database import async_session
 
 user = FastAPI()
 
