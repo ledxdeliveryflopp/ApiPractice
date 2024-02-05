@@ -9,3 +9,8 @@ class UserBaseSchemas(BaseModel):
 class UserCreateSchemas(UserBaseSchemas):
     """Схема создания пользователя"""
     password: str = Field(ge=6)
+
+
+class UserUpdateSchemas(UserBaseSchemas):
+    """Схема обновления пользователя"""
+    pass
