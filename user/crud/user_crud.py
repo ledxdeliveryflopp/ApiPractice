@@ -27,16 +27,12 @@ async def get_user_by_email(session: AsyncSession, email: EmailStr):
 
 async def create_user(session: AsyncSession, user_schemas: UserCreateSchemas):
     """Создание пользователя"""
-    user = await get_user_by_email(session=session, email=user_schemas.email)
-    if user:
-        return HTTPException(status_code=404, detail="this user already exist")
-    else:
-        new_user = UserModel(**user_schemas.dict(),
-                             password=hash_password(password=user_schemas.password))
-        session.add(new_user)
-        await session.commit()
-        await session.refresh(new_user)
-        return new_user
+    new_user = UserModel(email=user_schemas.email,
+                         password=hash_password(password=user_schemas.password))
+    session.add(new_user)
+    await session.commit()
+    await session.refresh(new_user)
+    return new_user
 
 
 async def update_user(session: AsyncSession, user_id: int, user_schemas: UserUpdateSchemas):
