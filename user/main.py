@@ -29,12 +29,8 @@ async def get_all_user_router(session: AsyncSession = Depends(get_session)):
 async def create_user_router(user_schemas: UserCreateSchemas,
                              session: AsyncSession = Depends(get_session)):
     """Роутер создания пользователя"""
-    user_check = await get_user_by_email(session=session, email=user_schemas.email)
-    if user_check:
-        raise HTTPException(status_code=404, detail="this user already exist")
-    else:
-        new_user = await create_user(user_schemas=user_schemas, session=session)
-        return new_user
+    new_user = await create_user(user_schemas=user_schemas, session=session)
+    return new_user
 
 
 @user.patch('/update-user/{user_id}', response_model=UserBaseSchemas)
