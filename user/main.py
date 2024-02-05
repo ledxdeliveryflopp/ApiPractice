@@ -19,10 +19,7 @@ async def get_session():
 async def get_all_user_router(session: AsyncSession = Depends(get_session)):
     """Роутер вывода всех пользователей"""
     users = await get_all_user(session=session)
-    if not users:
-        raise HTTPException(status_code=404, detail="not found")
-    else:
-        return users
+    return users
 
 
 @user.post('/create-user/', response_model=UserBaseSchemas)

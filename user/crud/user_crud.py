@@ -10,7 +10,10 @@ from utils.user_utils import hash_password
 async def get_all_user(session: AsyncSession):
     """Все пользователи"""
     users = await session.execute(Select(UserModel))
-    return users.scalars().all()
+    if not users:
+        raise HTTPException(status_code=404, detail="not found")
+    else:
+        return users.scalars().all()
 
 
 async def get_user_by_id(session: AsyncSession, id: int):
@@ -45,7 +48,6 @@ async def update_user(session: AsyncSession, user_id: int, user_schemas: UserUpd
     if not user:
         return HTTPException(status_code=404, detail="not found")
     else:
-        # test = user_schemas.model_dump(exclude_unset=True)
         for var, value in vars(user_schemas).items():
             setattr(user, var, value) if value else None
         session.add(user)
