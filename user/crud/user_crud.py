@@ -54,3 +54,4 @@ async def update_user(session: AsyncSession, user_id: int, user_schemas: UserUpd
         await session.commit()
         await session.refresh(user)
         return user
+

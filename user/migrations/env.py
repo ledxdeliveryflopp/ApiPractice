@@ -11,6 +11,8 @@ from alembic import context
 # access to the values within the .ini file in use.
 from database.database import Base
 from models import user_model
+from models import token_models
+
 
 config = context.config
 
