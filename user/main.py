@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
-from crud.user_crud import get_all_user, create_user, update_user, get_user_by_email
+from crud.auth_crud import login, verify_token
+from crud.user_crud import get_all_user, create_user, update_user
+from database.database import async_session
+from schemas.auth_schemas import AuthSchemas
 from schemas.user_schemas import UserBaseSchemas, UserCreateSchemas, UserUpdateSchemas
-from user_database.database import async_session
+
 
 user = FastAPI()
 
@@ -16,10 +19,14 @@ async def get_session():
 
 
 @user.get('/all-user/', response_model=list[UserBaseSchemas])
-async def get_all_user_router(session: AsyncSession = Depends(get_session)):
+async def get_all_user_router(request: Request, session: AsyncSession = Depends(get_session)):
     """Роутер вывода всех пользователей"""
-    users = await get_all_user(session=session)
-    return users
+    token = await verify_token(session=session, request=request)
+    if token:
+        users = await get_all_user(session=session)
+        return users
+    else:
+        return token
 
 
 @user.post('/create-user/', response_model=UserBaseSchemas)
@@ -33,6 +40,13 @@ async def create_user_router(user_schemas: UserCreateSchemas,
 @user.patch('/update-user/{user_id}', response_model=UserBaseSchemas)
 async def update_user_router(user_schemas: UserUpdateSchemas, user_id: int, session: AsyncSession
                              = Depends(get_session)):
-    """Обновление пользователя"""
+    """Роутер обновления пользователя"""
     updated_user = await update_user(user_schemas=user_schemas, user_id=user_id, session=session)
     return updated_user
+
+
+@user.post('/login/')
+async def login_router(login_schemas: AuthSchemas, session: AsyncSession = Depends(get_session)):
+    """Роутер авторизации"""
+    access_token = await login(session=session, login_schemas=login_schemas)
+    return access_token

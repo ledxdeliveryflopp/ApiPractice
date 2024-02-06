@@ -8,6 +8,6 @@ def hash_password(password: str):
     return pwd_context.hash(password)
 
 
-def verify_password(plain_password: str, password: str):
+async def verify_password(plain_password: str, password: str):
     """Проверка пароля"""
     return pwd_context.verify(plain_password, password)
