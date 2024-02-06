@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, Request
+from fastapi.security import HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from crud.auth_crud import login, verify_token
 from crud.user_crud import get_all_user, create_user, update_user
@@ -8,6 +9,8 @@ from schemas.user_schemas import UserBaseSchemas, UserCreateSchemas, UserUpdateS
 
 
 user = FastAPI()
+
+swagger_token = HTTPBearer()
 
 
 async def get_session():
@@ -19,9 +22,10 @@ async def get_session():
 
 
 @user.get('/all-user/', response_model=list[UserBaseSchemas])
-async def get_all_user_router(request: Request, session: AsyncSession = Depends(get_session)):
+async def get_all_user_router(request: Request, http_bearer: str = Depends(swagger_token),
+                              session: AsyncSession = Depends(get_session)):
     """Роутер вывода всех пользователей"""
-    token = await verify_token(session=session, request=request)
+    token = await verify_token(session=session, request=request, http_bearer=http_bearer)
     if token:
         users = await get_all_user(session=session)
         return users

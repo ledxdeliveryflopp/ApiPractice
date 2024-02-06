@@ -52,10 +52,34 @@ async def get_token(session: AsyncSession, token: str):
     if token:
         return token.scalar()
     else:
-        return HTTPException(status_code=404, detail="not found")
+        return HTTPException(status_code=404, detail="token dont exist")
 
 
-async def verify_token(session: AsyncSession, request: Request):
+async def get_swagger_token(session: AsyncSession, http_bearer: str):
+    """Получить токен из swagger"""
+    token = await session.execute(Select(TokenModel).filter(TokenModel.token == http_bearer))
+    if token:
+        return token.scalar()
+    else:
+        return HTTPException(status_code=404, detail="token dont exist")
+
+
+async def verify_swagger_token(session: AsyncSession, http_bearer: str):
+    """Проверка токена в swagger"""
+    http_bearer = dict(http_bearer)
+    swagger_token = http_bearer.get("credentials")
+    token = await get_swagger_token(session=session, http_bearer=swagger_token)
+    if not token:
+        raise HTTPException(status_code=400, detail="swagger token dont exist")
+    elif token.expire < datetime.now():
+        await session.delete(token)
+        await session.commit()
+        raise HTTPException(status_code=401, detail="token overdue")
+    else:
+        return token
+
+
+async def verify_token(session: AsyncSession, request: Request, http_bearer: str = None):
     """Проверка токена"""
     try:
         request.headers["Authorization"]
@@ -67,7 +91,10 @@ async def verify_token(session: AsyncSession, request: Request):
     header_token = header_token.replace("Bearer ", '')
     token = await get_token(session=session, token=header_token)
     if not token:
-        raise HTTPException(status_code=401, detail="token dont exist")
+        raise HTTPException(status_code=400, detail="token dont exist")
+    elif http_bearer:
+        swagger_token = await verify_swagger_token(session=session, http_bearer=http_bearer)
+        return swagger_token
     elif token.expire < datetime.now():
         await session.delete(token)
         await session.commit()
