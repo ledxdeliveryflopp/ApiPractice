@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.schemas import UserBaseSchemas, UserCreateSchemas
-from settings.depends import get_session
 from src.service import create_user
-
+from src.settings.depends import get_session
 
 router = APIRouter(
     prefix="/register",

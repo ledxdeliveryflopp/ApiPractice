@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, DateTime, func
-from settings.db import Base
+from src.settings.db import Base
 
 
 class DefaultModel(Base):

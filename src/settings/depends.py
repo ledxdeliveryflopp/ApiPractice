@@ -1,4 +1,4 @@
-from settings.db import async_session
+from src.settings.db import async_session
 
 
 async def get_session():

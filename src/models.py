@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String
-from settings.models import DefaultModel
+from src.settings.models import DefaultModel
 
 
 class UserModel(DefaultModel):
