@@ -14,12 +14,12 @@ services:
     ports:
     - "5432:5432"
 
-  user:
+  register_app:
     build:
-      ./user
+      ./register_app
     links:
       - database
-    command: uvicorn main:user --host 0.0.0.0 --port 7000
+    command: uvicorn main:register --host 0.0.0.0 --port 7000
     ports:
       - "7000:7000"
 
