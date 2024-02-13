@@ -1,11 +1,10 @@
 from pydantic import BaseModel, EmailStr
-from datetime import datetime
 
 
 class TokenBaseSchemas(BaseModel):
     """Основная схема токена"""
     access_token: str
-    expire: datetime
+    expire: str
     token_type: str
 
 
