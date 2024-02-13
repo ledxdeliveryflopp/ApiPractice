@@ -2,9 +2,10 @@ from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.models import UserModel
-from src.schemas import UserCreateSchemas
-from src.utils import hash_password
+from src.registration.models import UserModel
+from src.registration.schemas import UserCreateSchemas
+from src.registration.utils import hash_password
+from src.settings.exceptions import UserExist
 
 
 async def check_user(session: AsyncSession, username: str, email: EmailStr):
@@ -19,7 +20,7 @@ async def create_user(session: AsyncSession, user_schemas: UserCreateSchemas):
     user_check = await check_user(session=session, username=user_schemas.username,
                                   email=user_schemas.email)
     if user_check:
-        raise HTTPException(status_code=404, detail="this user already exist")
+        raise UserExist
     else:
         new_user = UserModel(username=user_schemas.username, email=user_schemas.email,
                              password=hash_password(user_schemas.password))

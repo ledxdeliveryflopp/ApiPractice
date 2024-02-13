@@ -1,6 +1,8 @@
 from fastapi import FastAPI
-from src.router import router
+from src.authorization.router import authorization_router
+from src.registration.router import register_router
 
-register = FastAPI()
+authorization = FastAPI()
 
-register.include_router(router)
+authorization.include_router(authorization_router)
+authorization.include_router(register_router)
