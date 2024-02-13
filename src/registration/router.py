@@ -6,7 +6,7 @@ from src.settings.depends import get_session
 
 
 register_router = APIRouter(
-    prefix="/register",
+    prefix="/registration",
     tags=["auth"],
 )
 
