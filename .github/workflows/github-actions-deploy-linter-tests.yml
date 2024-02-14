@@ -38,9 +38,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Build docker images
         run: docker-compose up -d
-      - name: Activate Bash
-        run: docker exec authorization /bin/bash
       - name: Enter to test directory
-        run: docker exec authorization cd /tests
+        run: docker exec authorization cd tests
       - name: Check code by tests
         run: docker exec authorization pytest
