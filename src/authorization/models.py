@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Integer, DateTime
 from src.settings.db import Base
 
 
-class Token(Base):
+class TokenModel(Base):
     """Модель токенов"""
     __tablename__ = 'token'
 

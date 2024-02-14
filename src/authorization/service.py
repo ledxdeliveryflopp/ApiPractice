@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from jose import jwt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.authorization.models import Token
+from src.authorization.models import TokenModel
 from src.authorization.schemas import LoginSchemas
 from src.authorization.utils import verify_password
 from src.registration.models import UserModel
@@ -23,7 +23,7 @@ async def create_access_token(session: AsyncSession, user_email: str):
     data.update({"expire": expire_str, "user_email": user_email, "random": random_string,
                  "token_type": "bearer"})
     encoded_jwt = jwt.encode(data, settings.secret_key, algorithm=settings.algorithm)
-    new_token = Token(token=encoded_jwt, expire=expire)
+    new_token = TokenModel(token=encoded_jwt, expire=expire)
     session.add(new_token)
     await session.commit()
     await session.refresh(new_token)
