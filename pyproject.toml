@@ -30,4 +30,4 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-exclude = ["migrations"]
+exclude = ["migrations", "usr", "venv", "tmp", "var", "migrations", "dev"]

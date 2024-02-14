@@ -1,0 +1,44 @@
+name: "Python CI"
+on:
+
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build docker images
+        run: docker-compose up -d
+      - name: Check running containers
+        run: docker ps -a
+
+  Linter:
+    needs: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build docker images
+        run: docker-compose up -d
+      - name: Check code by linter
+        run: docker exec authorization ruff check
+
+
+  Tests:
+    needs: Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build docker images
+        run: docker-compose up -d
+      - name: Enter to test directory
+        run: docker exec authorization cd tests
+      - name: Check code by tests
+        run: docker exec authorization pytest
