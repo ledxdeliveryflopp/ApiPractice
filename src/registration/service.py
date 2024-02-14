@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 from pydantic import EmailStr
 from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
