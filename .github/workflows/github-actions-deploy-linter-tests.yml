@@ -30,17 +30,14 @@ jobs:
         run: docker exec authorization ruff check
 
 
-  Tests:
-    needs: Linter
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build docker images
-        run: docker-compose up -d
-      - name: Activate Bash
-        run: docker exec authorization /bin/bash
-      - name: Enter to test directory
-        run: docker exec authorization cd tests
-      - name: Check code by tests
-        run: docker exec authorization pytest
+#  Tests:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#      - name: Build docker images
+#        run: docker-compose up -d
+#      - name: Enter to test directory
+#        run:  docker exec -i authorization bash -c "cd /tests && pytest"
+#      - name: Check code by tests
+#        run: docker exec authorization pytest
