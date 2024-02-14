@@ -39,6 +39,6 @@ jobs:
       - name: Build docker images
         run: docker-compose up -d
       - name: Enter to test directory
-        run: docker exec authorization bash "cd tests"
+        run: docker exec authorization bash "cd /tests/"
       - name: Check code by tests
         run: docker exec authorization pytest
