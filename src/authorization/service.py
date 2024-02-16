@@ -43,8 +43,10 @@ async def login(session: AsyncSession, login_schemas: LoginSchemas):
     user = await get_user_by_email(session=session, email=login_schemas.email)
     if not user:
         raise BadCredentials
-    password = read_secret()
-    if login_schemas.password != password:
+    password_from_vault = await read_secret(email=login_schemas.email)
+    password = await verify_password(plain_password=login_schemas.password,
+                                     password=password_from_vault)
+    if not password:
         raise BadCredentials
     else:
         access_token = await create_access_token(session=session, user_email=login_schemas.email)

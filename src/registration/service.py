@@ -23,7 +23,8 @@ async def create_user(session: AsyncSession, user_schemas: UserCreateSchemas):
         raise UserExist
     else:
         new_user = UserModel(username=user_schemas.username, email=user_schemas.email)
-        user_password = create_secret()
+        await create_secret(email=user_schemas.email, password=hash_password(
+            password=user_schemas.password))
         session.add(new_user)
         await session.commit()
         await session.refresh(new_user)

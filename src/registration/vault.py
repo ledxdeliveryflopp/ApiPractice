@@ -6,15 +6,15 @@ client = hvac.Client(
 )
 
 
-def create_secret():
+async def create_secret(email: str, password: str):
     new_secret = client.secrets.kv.v2.create_or_update_secret(
-        path=f'password',
-        secret=dict(password=f"sdfdsfsdfsdf"),
+        path=f'{email}-secret-password',
+        secret=dict(password=f"{password}"),
     )
     return new_secret
 
 
-def read_secret():
-    secret_by_vault = client.secrets.kv.read_secret_version(path=f'password')
+async def read_secret(email: str):
+    secret_by_vault = client.secrets.kv.read_secret_version(path=f'{email}-secret-password')
     secret = secret_by_vault["data"]["data"]["password"]
     return secret
