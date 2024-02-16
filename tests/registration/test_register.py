@@ -24,10 +24,11 @@ async def test_failed_register():
                                      json={"username": "test", "email": "test.ru",
                                            "password": "DSTA"})
         assert response.status_code == 422
+        assert response.json() == response.json()
 
 
 @pytest.mark.asyncio
-async def duplicate_register(t):
+async def duplicate_register():
     """Тест регистрации существующего пользователя"""
     async with AsyncClient() as client:
         response = await client.post(url=f'{settings.register_url}/register/',

@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.registration.models import UserModel
 from src.registration.schemas import UserCreateSchemas
 from src.registration.utils import hash_password
+from src.registration.vault import create_secret
 from src.settings.exceptions import UserExist
 
 
@@ -21,8 +22,8 @@ async def create_user(session: AsyncSession, user_schemas: UserCreateSchemas):
     if user_check:
         raise UserExist
     else:
-        new_user = UserModel(username=user_schemas.username, email=user_schemas.email,
-                             password=hash_password(user_schemas.password))
+        new_user = UserModel(username=user_schemas.username, email=user_schemas.email)
+        user_password = create_secret()
         session.add(new_user)
         await session.commit()
         await session.refresh(new_user)

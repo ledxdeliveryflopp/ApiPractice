@@ -15,12 +15,37 @@ services:
     ports:
     - "5432:5432"
 
+
+  vault:
+    image: library/vault:1.13.3
+    container_name: vault
+    restart: on-failure:10
+    environment:
+      VAULT_TOKEN: "dev-only-token"
+      VAULT_ADDR: "http://127.0.0.1:8200"
+      VAULT_API_ADDR: "http://127.0.0.1:8200"
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    cap_add:
+      - IPC_LOCK
+#    volumes:
+#      - ./vault/config:/vault/config
+#      - ./vault/policies:/vault/policies
+#      - ./vault/data:/vault/data
+#      - ./vault/logs:/vault/logs
+    healthcheck:
+      retries: 5
+    command: vault server -dev -dev-root-token-id="dev-only-token"
+    ports:
+      - "8200:8200/tcp"
+
+
   authorization_app:
     container_name: authorization
     build:
       ./
     links:
       - database
+      - vault
     command: uvicorn main:authorization --host 0.0.0.0 --port 7000
     ports:
       - "7000:7000"
@@ -28,3 +53,4 @@ services:
 
 volumes:
   database:
+  vault:

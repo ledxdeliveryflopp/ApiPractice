@@ -2,19 +2,21 @@ import random
 import string
 from datetime import datetime, timedelta
 from jose import jwt
+from pydantic import EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.authorization.models import TokenModel
 from src.authorization.schemas import LoginSchemas
 from src.authorization.utils import verify_password
 from src.registration.models import UserModel
+from src.registration.vault import read_secret
 from src.settings.exceptions import BadCredentials
 from src.settings.settings import Settings
 
 settings = Settings()
 
 
-async def create_access_token(session: AsyncSession, user_email: str):
+async def create_access_token(session: AsyncSession, user_email: EmailStr):
     """Создание токена"""
     data = {}
     expire = datetime.now() + timedelta(minutes=15)
@@ -30,7 +32,7 @@ async def create_access_token(session: AsyncSession, user_email: str):
     return new_token
 
 
-async def get_user_by_email(email: str, session: AsyncSession):
+async def get_user_by_email(session: AsyncSession, email: EmailStr):
     """Пользователь по email"""
     user = await session.execute(select(UserModel).filter(UserModel.email == email))
     return user.scalar()
@@ -41,8 +43,8 @@ async def login(session: AsyncSession, login_schemas: LoginSchemas):
     user = await get_user_by_email(session=session, email=login_schemas.email)
     if not user:
         raise BadCredentials
-    password = await verify_password(plain_password=login_schemas.password, password=user.password)
-    if not password:
+    password = read_secret()
+    if login_schemas.password != password:
         raise BadCredentials
     else:
         access_token = await create_access_token(session=session, user_email=login_schemas.email)
