@@ -21,7 +21,7 @@ services:
     container_name: vault
     restart: on-failure:10
     environment:
-      VAULT_TOKEN: "dev-only-token"
+      VAULT_DEV_ROOT_TOKEN_ID: "dev-only-token"
       VAULT_ADDR: "http://127.0.0.1:8200"
       VAULT_API_ADDR: "http://127.0.0.1:8200"
       VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
@@ -30,8 +30,7 @@ services:
     healthcheck:
       retries: 5
     command: >
-      sh -c "vault server -dev -dev-root-token-id="dev-only-token" &&
-      vault secrets enable-path=kv kv"
+      sh -c "vault server -dev -dev-root-token-id="dev-only-token""
     ports:
       - "8200:8200/tcp"
 

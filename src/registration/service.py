@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.registration.models import UserModel
 from src.registration.schemas import UserCreateSchemas
 from src.registration.utils import hash_password
-from src.registration.vault import create_secret
 from src.settings.exceptions import UserExist
+from src.vault.service import create_secret
 
 
 async def check_user(session: AsyncSession, username: str, email: EmailStr):

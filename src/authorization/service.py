@@ -9,9 +9,9 @@ from src.authorization.models import TokenModel
 from src.authorization.schemas import LoginSchemas
 from src.authorization.utils import verify_password
 from src.registration.models import UserModel
-from src.registration.vault import read_secret
 from src.settings.exceptions import BadCredentials
 from src.settings.settings import Settings
+from src.vault.service import read_secret
 
 settings = Settings()
 

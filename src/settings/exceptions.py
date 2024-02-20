@@ -18,3 +18,8 @@ class BadCredentials(DetailedHTTPException):
 class UserExist(DetailedHTTPException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "User already exist."
+
+
+class UserDontExist(DetailedHTTPException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "User don't exist."
