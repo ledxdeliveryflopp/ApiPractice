@@ -8,7 +8,7 @@
   },
   "storage": {
     "file": {
-      "path": "/vault/file"
+      "path": "/vault/storage"
     }
   },
   "api_addr": "http://127.0.0.1:8200"
