@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "register system"
+name = "Authorization microservice"
 version = "0.1"
-description = "register system"
+description = "Authorization microservice"
 authors = ["LedxDeliveryFlopp <korstim18@gmail.com>"]
 readme = "README.md"
 
