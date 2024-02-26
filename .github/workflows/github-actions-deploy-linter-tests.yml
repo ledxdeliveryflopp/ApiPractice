@@ -2,7 +2,7 @@ name: "Python CI"
 on:
 
   push:
-    branches: ["master"]
+    branches: ["master", "vault_integrations"]
   pull_request:
     branches: ["master"]
 
@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Build docker images
+      - name: Build docker container
         run: docker-compose up -d
       - name: Check running containers
         run: docker ps -a
@@ -24,20 +24,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Build docker images
+      - name: Build docker container
         run: docker-compose up -d
       - name: Check code by linter
         run: docker exec authorization ruff check
-
-
-#  Tests:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#      - name: Build docker images
-#        run: docker-compose up -d
-#      - name: Enter to test directory
-#        run:  docker exec -i authorization bash -c "cd /tests && pytest"
-#      - name: Check code by tests
-#        run: docker exec authorization pytest

@@ -5,6 +5,7 @@ from src.registration.models import UserModel
 from src.registration.schemas import UserCreateSchemas
 from src.registration.utils import hash_password
 from src.settings.exceptions import UserExist
+from src.vault.service import create_secret
 
 
 async def check_user(session: AsyncSession, username: str, email: EmailStr):
@@ -21,8 +22,9 @@ async def create_user(session: AsyncSession, user_schemas: UserCreateSchemas):
     if user_check:
         raise UserExist
     else:
-        new_user = UserModel(username=user_schemas.username, email=user_schemas.email,
-                             password=hash_password(user_schemas.password))
+        new_user = UserModel(username=user_schemas.username, email=user_schemas.email)
+        await create_secret(email=user_schemas.email, password=hash_password(
+            password=user_schemas.password))
         session.add(new_user)
         await session.commit()
         await session.refresh(new_user)

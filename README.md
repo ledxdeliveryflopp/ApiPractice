@@ -1,31 +1,56 @@
-1. Установка [python3.11.3](https://www.get-python.org/downloads/release/python-3113/)
-2. Проверить в консоле 
-```bash 
-python3  
-```
-3. Создать виртуальное окружение в папке с проектом, пишем в консоле
-```bash 
-python3 -m venv venv  
-```
-Должна появиться дериктория venv
-
-4. Активируем вертиульную среду, в консоле
-```bash 
-source venv/bin/activate 
-```
-5. Устновим менеджер пакетов Poetry
+1. Установим менеджер пакетов Poetry.
 ```bash 
 pip install poetry
 ```
-6. Установим зависимости из Poetry
+
+2. Перейдем в src/settings/settings.py и установим нужные значения.
+
+
+3. Создадим контейнеры .
 ```bash 
-poetry update
+docker compose up -d
 ```
-7. Развернем Docker 
-```bash 
-docker-compose up -d --build <service_name>
-```
-8. Выполним начальную миграцию
+
+4. Перейдем в контейнер "authorization" и выполним миграции.
 ```bash 
 alembic revision --autogenerate -m "init"
+
+elembic upgrade head
 ```
+
+5. Перейдем в контейнер vault и инициализируем его. (Сохраните токены)
+```bash 
+vault operator init
+```
+
+6. Разблокируем хранилище токенами
+```bash 
+vault operator unseal
+```
+
+7. Пройдем аунтификацию с помощью root токена.
+```bash 
+vaul login
+```
+
+8. Загрузим правила доступа для токена.
+```bash 
+vault policy write app_policy policy.hcl
+```
+
+9. Создадим токен для приложения
+```bash 
+vault token create -policy=app_policy
+```
+
+10. Сохраним токен в src/settings/settings.py в переменную vault_token
+```bash 
+vault token create -policy=app_policy
+```
+
+11. Создадим хранилище секретов.
+```bash 
+vault secrets enable -path=<Название хранилища> kv
+```
+
+12. Сохраним путь к хранилищу в src/settings/settings.py в переменную vault_mount
