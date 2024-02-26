@@ -50,6 +50,4 @@ async def login(session: AsyncSession, login_schemas: LoginSchemas):
         raise BadCredentials
     else:
         access_token = await create_access_token(session=session, user_email=login_schemas.email)
-        access_token_expire_str = access_token.expire.strftime("%d-%m-%Y %H:%M:%S")
-        return {"access_token": access_token.token, "expire": access_token_expire_str,
-                "token_type": "Bearer"}
+        return {"access_token": access_token.token, "token_type": "Bearer"}
