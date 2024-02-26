@@ -16,6 +16,12 @@ from src.vault.service import read_secret
 settings = Settings()
 
 
+async def get_user_by_email(session: AsyncSession, email: EmailStr):
+    """Пользователь по email"""
+    user = await session.execute(select(UserModel).filter(UserModel.email == email))
+    return user.scalar()
+
+
 async def create_access_token(session: AsyncSession, user_email: EmailStr):
     """Создание токена"""
     data = {}
@@ -30,12 +36,6 @@ async def create_access_token(session: AsyncSession, user_email: EmailStr):
     await session.commit()
     await session.refresh(new_token)
     return new_token
-
-
-async def get_user_by_email(session: AsyncSession, email: EmailStr):
-    """Пользователь по email"""
-    user = await session.execute(select(UserModel).filter(UserModel.email == email))
-    return user.scalar()
 
 
 async def login(session: AsyncSession, login_schemas: LoginSchemas):

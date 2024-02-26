@@ -33,24 +33,24 @@ vault operator unseal
 vaul login
 ```
 
-7. Загрузим правила доступа для токена.
+8. Загрузим правила доступа для токена.
 ```bash 
 vault policy write app_policy policy.hcl
 ```
 
-8. Создадим токен для приложения
+9. Создадим токен для приложения
 ```bash 
 vault token create -policy=app_policy
 ```
 
-9. Сохраним токен в src/settings/settings.py в переменную vault_token
+10. Сохраним токен в src/settings/settings.py в переменную vault_token
 ```bash 
 vault token create -policy=app_policy
 ```
 
-9. Создадим хранилище секретов.
+11. Создадим хранилище секретов.
 ```bash 
 vault secrets enable -path=<Название хранилища> kv
 ```
 
-10. Сохраним путь к хранилищу в src/settings/settings.py в переменную vault_mount
+12. Сохраним путь к хранилищу в src/settings/settings.py в переменную vault_mount
