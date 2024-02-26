@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Build docker network
+        run: docker network create sql
       - name: Build docker container
         run: docker-compose up -d
       - name: Check running containers
