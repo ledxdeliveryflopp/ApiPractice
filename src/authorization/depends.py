@@ -1,6 +1,6 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.authorization.repositroy import TokenRepository
+from src.authorization.repository import TokenRepository
 from src.authorization.schemas import LoginSchemas
 from src.authorization.service import TokenService
 from src.settings.depends import get_session

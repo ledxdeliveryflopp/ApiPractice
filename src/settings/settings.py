@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class JwtSettings(BaseSettings):
+    """Настройки jwt токенов"""
     jwt_secret: str
     jwt_algorithm: str
 
@@ -9,6 +10,7 @@ class JwtSettings(BaseSettings):
 
 
 class SqlSettings(BaseSettings):
+    """Настройки для БД"""
     sql_user: str
     sql_password: str
     sql_host: str
@@ -26,6 +28,7 @@ class UrlSettings(BaseSettings):
 
 
 class VaultSettings(BaseSettings):
+    """Настройки для vault"""
     vault_url: str
     vault_token: str
     vault_mount: str
