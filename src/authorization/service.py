@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from src.authorization.repositroy import TokenRepository
+from src.authorization.repository import TokenRepository
 
 
 @dataclass(repr=False)
