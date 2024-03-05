@@ -2,8 +2,5 @@ from src.settings.db import async_session
 
 
 async def get_session():
-    session = async_session()
-    try:
+    async with async_session() as session:
         yield session
-    finally:
-        await session.close()
