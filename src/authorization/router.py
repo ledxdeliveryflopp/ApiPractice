@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.authorization.schemas import TokenBaseSchemas, LoginSchemas
-from src.authorization.service import login
-from src.settings.depends import get_session
+from src.authorization.depends import get_token_service
+from src.authorization.schemas import TokenBaseSchemas
+from src.authorization.service import TokenService
 
 
 authorization_router = APIRouter(
@@ -12,7 +11,7 @@ authorization_router = APIRouter(
 
 
 @authorization_router.post('/login/', response_model=TokenBaseSchemas)
-async def login_router(login_schemas: LoginSchemas, session: AsyncSession = Depends(get_session)):
+async def login_router(token: TokenService = Depends(get_token_service)):
     """Роутер авторизации"""
-    token = await login(session=session, login_schemas=login_schemas)
-    return token
+    new_token = await token.login()
+    return new_token
