@@ -1,31 +1,18 @@
-from pydantic import EmailStr
-from sqlalchemy import select, or_
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.registration.models import UserModel
-from src.registration.schemas import UserCreateSchemas
-from src.registration.utils import hash_password
-from src.settings.exceptions import UserExist
-from src.vault.service import create_secret
+from dataclasses import dataclass
+from src.registration.repository import UserRepository
 
 
-async def check_user(session: AsyncSession, username: str, email: EmailStr):
-    """Проверка на существование пользователя"""
-    user = await session.execute(select(UserModel).filter(or_(UserModel.username == username,
-                                                              UserModel.email == email)))
-    return user.scalar()
+@dataclass(repr=False)
+class UserService:
+    """Класс сервиса пользователей"""
+    repository: UserRepository
 
-
-async def create_user(session: AsyncSession, user_schemas: UserCreateSchemas):
-    """Создание пользователя"""
-    user_check = await check_user(session=session, username=user_schemas.username,
-                                  email=user_schemas.email)
-    if user_check:
-        raise UserExist
-    else:
-        new_user = UserModel(username=user_schemas.username, email=user_schemas.email)
-        await create_secret(email=user_schemas.email, password=hash_password(
-            password=user_schemas.password))
-        session.add(new_user)
-        await session.commit()
-        await session.refresh(new_user)
+    async def create_user(self):
+        """Создание пользователя"""
+        new_user = await self.repository.create_user()
         return new_user
+
+    async def find_user_by_email(self):
+        """Поиск пользователя по email"""
+        user = await self.repository.find_user_by_email()
+        return user
