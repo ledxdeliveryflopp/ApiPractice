@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.registration.models import UserModel
 from src.registration.schemas import UserCreateSchemas
@@ -9,21 +9,22 @@ from src.settings.repository import SessionRepository
 from src.vault.service import create_secret
 
 
-@dataclass
+@dataclass(repr=False, eq=False)
 class UserRepository:
     """Класс для взаимодействия с БД для пользователей"""
     user_schemas: UserCreateSchemas
     session: AsyncSession
 
-    async def find_user_by_email(self):
+    async def find_user(self):
         """Поиск пользователя по email"""
         user = await self.session.execute(select(UserModel).filter
-                                          ((UserModel.email == self.user_schemas.email)))
+                                          (or_(UserModel.email == self.user_schemas.email,
+                                               UserModel.username == self.user_schemas.username)))
         return user.scalar()
 
     async def create_user(self):
         """Создание пользователя"""
-        user = await self.find_user_by_email()
+        user = await self.find_user()
         if user:
             raise UserExist
         user = UserModel(username=self.user_schemas.username, email=self.user_schemas.email)

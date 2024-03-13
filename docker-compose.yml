@@ -17,6 +17,7 @@ services:
     networks:
       - sql
 
+
   vault:
     image: library/vault:1.13.3
     container_name: vault
@@ -55,3 +56,4 @@ networks:
 
 volumes:
   database:
+  database_test:

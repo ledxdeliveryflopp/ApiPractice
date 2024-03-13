@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from src.authorization.repository import TokenRepository
 
 
-@dataclass(repr=False)
+@dataclass(repr=False, eq=False)
 class TokenService:
     """Класс сервиса токенов"""
     repository: TokenRepository

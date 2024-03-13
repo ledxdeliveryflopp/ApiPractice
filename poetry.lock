@@ -739,6 +739,20 @@ files = [
 ]
 
 [[package]]
+name = "mock-alchemy"
+version = "0.2.6"
+description = "SQLAlchemy mock helpers."
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "mock_alchemy-0.2.6-py3-none-any.whl", hash = "sha256:d5e17f2c92d0299d70cd9a0d3c8f96f759a81c285c76b03f4192451583bf865f"},
+    {file = "mock_alchemy-0.2.6.tar.gz", hash = "sha256:807cc2bd7f658fb98292900052eaa6eeb4a65b2d62364e639462480a275299ef"},
+]
+
+[package.dependencies]
+SQLAlchemy = ">=2.0.6,<3.0.0"
+
+[[package]]
 name = "packaging"
 version = "23.2"
 description = "Core utilities for Python packages"
@@ -1104,6 +1118,33 @@ pytest = ">=5.0"
 dev = ["pre-commit", "pytest-asyncio", "tox"]
 
 [[package]]
+name = "pytest-mock-resources"
+version = "2.10.1"
+description = "A pytest plugin for easily instantiating reproducible mock resources."
+optional = false
+python-versions = ">=3.7,<4"
+files = [
+    {file = "pytest_mock_resources-2.10.1-py3-none-any.whl", hash = "sha256:51969550bfe43ccf09f66b9454274e967b6faf05ca15c445707fab7be5cd9901"},
+    {file = "pytest_mock_resources-2.10.1.tar.gz", hash = "sha256:191ae45405d46a82f652d6cd641cd3105802d9bb395ae750566e3a1611c597f4"},
+]
+
+[package.dependencies]
+pytest = ">=1.0"
+sqlalchemy = ">1.0,<1.4.0 || >1.4.0,<1.4.1 || >1.4.1,<1.4.2 || >1.4.2,<1.4.3 || >1.4.3,<1.4.4 || >1.4.4,<1.4.5 || >1.4.5,<1.4.6 || >1.4.6,<1.4.7 || >1.4.7,<1.4.8 || >1.4.8,<1.4.9 || >1.4.9,<1.4.10 || >1.4.10,<1.4.11 || >1.4.11,<1.4.12 || >1.4.12,<1.4.13 || >1.4.13,<1.4.14 || >1.4.14,<1.4.15 || >1.4.15,<1.4.16 || >1.4.16,<1.4.17 || >1.4.17,<1.4.18 || >1.4.18,<1.4.19 || >1.4.19,<1.4.20 || >1.4.20,<1.4.21 || >1.4.21,<1.4.22 || >1.4.22,<1.4.23 || >1.4.23"
+typing_extensions = "*"
+
+[package.extras]
+docker = ["filelock", "python-on-whales (>=0.22.0)"]
+mongo = ["filelock", "pymongo", "python-on-whales (>=0.22.0)"]
+moto = ["boto3", "filelock", "python-on-whales (>=0.22.0)"]
+mysql = ["filelock", "pymysql (>=1.0)", "python-on-whales (>=0.22.0)"]
+postgres = ["filelock", "psycopg2", "python-on-whales (>=0.22.0)"]
+postgres-async = ["asyncpg", "filelock", "python-on-whales (>=0.22.0)"]
+postgres-binary = ["filelock", "psycopg2-binary", "python-on-whales (>=0.22.0)"]
+redis = ["filelock", "python-on-whales (>=0.22.0)", "redis"]
+redshift = ["boto3", "filelock", "moto", "python-on-whales (>=0.22.0)", "sqlparse"]
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -1375,4 +1416,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "62098c6490f79bc4252e47fb04691de215c9c92ab1e9a86b63f9e73e6968903b"
+content-hash = "016e96308ede55d07a6b6fdf04a5834403e9146286dfcf83b68d9ba543f2f0ee"

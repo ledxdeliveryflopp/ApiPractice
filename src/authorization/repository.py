@@ -15,7 +15,7 @@ from src.settings.settings import settings
 from src.vault.service import read_secret
 
 
-@dataclass
+@dataclass(repr=False, eq=False)
 class TokenRepository:
     """Класс для взаимодействия с БД для токенов"""
     session: AsyncSession
@@ -54,4 +54,3 @@ class TokenRepository:
             raise BadCredentials
         access_token = await self.create_access_token()
         return {"access_token": access_token.token, "token_type": "Bearer"}
-
