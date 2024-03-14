@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -43,6 +44,13 @@ class Settings(BaseSettings):
     vault_settings: VaultSettings
 
 
-settings = Settings(jwt_settings=JwtSettings(), sql_settings=SqlSettings(),
-                    url_settings=UrlSettings(),
-                    vault_settings=VaultSettings())
+@lru_cache()
+def init_settings():
+    all_settings = Settings(jwt_settings=JwtSettings(), sql_settings=SqlSettings(),
+                            url_settings=UrlSettings(),
+                            vault_settings=VaultSettings())
+    return all_settings
+
+
+settings = init_settings()
+
