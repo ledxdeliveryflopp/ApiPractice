@@ -23,3 +23,13 @@ class UserExist(DetailedHTTPException):
 class UserDontExist(DetailedHTTPException):
     status_code = status.HTTP_404_NOT_FOUND
     detail = "User don't exist."
+
+
+class VaultInvalidPath(DetailedHTTPException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Vault path error, report the problem to technical support or try another email."
+
+
+class VaultInvalidSealed(DetailedHTTPException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Vault sealed, report the problem to technical support."
