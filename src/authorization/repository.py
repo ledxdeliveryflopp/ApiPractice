@@ -48,7 +48,7 @@ class TokenRepository:
         if not user:
             raise BadCredentials
         vault_repository = VaultRepository()
-        password_from_vault = await vault_repository.read_secret(email=self.login_schemas.email)
+        password_from_vault = await vault_repository.read_secret(user_id=user.id)
         password = await verify_password(plain_password=self.login_schemas.password,
                                          password=password_from_vault)
         if not password:

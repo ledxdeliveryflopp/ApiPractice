@@ -29,7 +29,7 @@ class UserRepository:
             raise UserExist
         user = UserModel(username=self.user_schemas.username, email=self.user_schemas.email)
         vault_repository = VaultRepository()
-        await vault_repository.create_secret(email=self.user_schemas.email,
+        await vault_repository.create_secret(user_id=user.id,
                                              password=hash_password(self.user_schemas.password))
         session_create = SessionRepository(session=self.session, object=user)
         await session_create.session_add()

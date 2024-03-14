@@ -6,4 +6,3 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 def hash_password(password: str):
     """Хэширование пароля"""
     return pwd_context.hash(password)
-
