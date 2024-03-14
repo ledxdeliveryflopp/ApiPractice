@@ -6,7 +6,7 @@ from src.registration.schemas import UserCreateSchemas
 from src.registration.utils import hash_password
 from src.settings.exceptions import UserExist
 from src.settings.repository import SessionRepository
-from src.vault.service import create_secret
+from src.vault.repository import VaultRepository
 
 
 @dataclass(repr=False, eq=False)
@@ -28,8 +28,9 @@ class UserRepository:
         if user:
             raise UserExist
         user = UserModel(username=self.user_schemas.username, email=self.user_schemas.email)
-        await create_secret(email=self.user_schemas.email, password=hash_password(
-            password=self.user_schemas.password))
+        vault_repository = VaultRepository()
+        await vault_repository.create_secret(email=self.user_schemas.email,
+                                             password=hash_password(self.user_schemas.password))
         session_create = SessionRepository(session=self.session, object=user)
         await session_create.session_add()
         return user

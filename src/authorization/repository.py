@@ -12,14 +12,14 @@ from src.registration.models import UserModel
 from src.settings.exceptions import BadCredentials
 from src.settings.repository import SessionRepository
 from src.settings.settings import settings
-from src.vault.service import read_secret
+from src.vault.repository import VaultRepository
 
 
 @dataclass(repr=False, eq=False)
 class TokenRepository:
     """Класс для взаимодействия с БД для токенов"""
-    session: AsyncSession
     login_schemas: LoginSchemas
+    session: AsyncSession
 
     async def find_user_by_email(self):
         """Поиск пользователя по email"""
@@ -47,7 +47,8 @@ class TokenRepository:
         user = await self.find_user_by_email()
         if not user:
             raise BadCredentials
-        password_from_vault = await read_secret(email=self.login_schemas.email)
+        vault_repository = VaultRepository()
+        password_from_vault = await vault_repository.read_secret(email=self.login_schemas.email)
         password = await verify_password(plain_password=self.login_schemas.password,
                                          password=password_from_vault)
         if not password:
