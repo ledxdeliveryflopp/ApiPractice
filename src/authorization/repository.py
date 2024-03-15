@@ -30,10 +30,9 @@ class TokenRepository:
     async def create_access_token(self):
         """Создание access токена"""
         data = {}
-        expire = datetime.now() + timedelta(minutes=15)
-        expire_str = expire.strftime("%d-%m-%Y %H:%M:%S")
-        random_string = random.choices(string.ascii_letters, k=4)
-        data.update({"expire": expire_str, "user_email": self.login_schemas.email, "random":
+        expire = datetime.utcnow() + timedelta(minutes=30)
+        random_string = random.choices(string.printable, k=10)
+        data.update({"user_email": self.login_schemas.email, "random":
                     random_string, "token_type": "bearer"})
         encoded_jwt = jwt.encode(data, settings.jwt_settings.jwt_secret,
                                  algorithm=settings.jwt_settings.jwt_algorithm)

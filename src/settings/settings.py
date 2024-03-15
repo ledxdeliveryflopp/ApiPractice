@@ -22,6 +22,7 @@ class SqlSettings(BaseSettings):
 
 
 class UrlSettings(BaseSettings):
+    """Настройки url для тестов"""
     auth_url: str
     register_url: str
 
@@ -38,6 +39,7 @@ class VaultSettings(BaseSettings):
 
 
 class Settings(BaseSettings):
+    """Все настройки"""
     jwt_settings: JwtSettings
     sql_settings: SqlSettings
     url_settings: UrlSettings
@@ -46,6 +48,7 @@ class Settings(BaseSettings):
 
 @lru_cache()
 def init_settings():
+    """Инициализация настроек"""
     all_settings = Settings(jwt_settings=JwtSettings(), sql_settings=SqlSettings(),
                             url_settings=UrlSettings(),
                             vault_settings=VaultSettings())

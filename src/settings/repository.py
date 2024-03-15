@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 @dataclass
 class SessionRepository:
-    """Класс для сохранения в БД"""
+    """Класс для сохранения и удаление из БД"""
     session: AsyncSession
     object: dict
 
