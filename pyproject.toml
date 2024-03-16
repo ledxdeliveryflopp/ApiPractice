@@ -36,7 +36,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.ruff]
-exclude = ["migrations", "usr", "venv", "tmp", "var", "migrations"]
+exclude = ["usr", "venv", "tmp", "var"]
 line-length = 88
 indent-width = 4
 target-version = "py311"
