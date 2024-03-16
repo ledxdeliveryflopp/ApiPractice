@@ -9,7 +9,7 @@ from src.settings.settings import settings
 class VaultRepository:
     client = hvac.Client(
         url=settings.vault_settings.vault_url,
-        token=settings.vault_settings.vault_token,
+        token=settings.vault_settings.vault_token_app,
     )
 
     async def create_secret(self, user_id: int, password: str):

@@ -6,10 +6,8 @@ services:
     container_name: database
     image: postgres
     restart: always
-    environment:
-      POSTGRES_USER: ${SQL_USER}
-      POSTGRES_DB: ${SQL_NAME}
-      POSTGRES_PASSWORD: ${SQL_PASSWORD}
+    env_file:
+      - .env
     volumes:
     - database:/data/
     ports:
@@ -21,10 +19,6 @@ services:
   vault:
     image: library/vault:1.13.3
     container_name: vault
-    environment:
-      VAULT_ADDR: "http://127.0.0.1:8200"
-      VAULT_API_ADDR: "http://127.0.0.1:8200"
-      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
     cap_add:
         - IPC_LOCK
     volumes:
@@ -48,6 +42,21 @@ services:
     networks:
       - sql
       - vault
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /
+          ignore:
+            - .git
+            - .github
+            - .idea
+            - .venv
+            - .gitignore
+            - README.md
+        - action: rebuild
+          path: pyproject.toml
+
 
 networks:
     sql:
@@ -56,4 +65,3 @@ networks:
 
 volumes:
   database:
-  database_test:

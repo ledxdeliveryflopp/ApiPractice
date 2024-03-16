@@ -32,7 +32,7 @@ class UrlSettings(BaseSettings):
 class VaultSettings(BaseSettings):
     """Настройки для vault"""
     vault_url: str
-    vault_token: str
+    vault_token_app: str
     vault_mount: str
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
