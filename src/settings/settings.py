@@ -20,6 +20,11 @@ class SqlSettings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
+    @property
+    def db_full_url(self) -> str:
+        return (f"postgresql+asyncpg://{self.sql_user}:{self.sql_password}@"
+                f"{self.sql_host}:{self.sql_port}/{self.sql_name}")
+
 
 class UrlSettings(BaseSettings):
     """Настройки url для тестов"""
