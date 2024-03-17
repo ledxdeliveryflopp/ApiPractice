@@ -1,5 +1,14 @@
+import random
+import string
 from dataclasses import dataclass
+from datetime import datetime, timedelta
+from jose import jwt
+from src.authorization.models import TokenModel
 from src.authorization.repository import TokenRepository
+from src.authorization.utils import verify_password
+from src.settings.exceptions import BadCredentials
+from src.settings.settings import settings
+from src.vault.service import VaultService
 
 
 @dataclass(repr=False, eq=False)
@@ -7,12 +16,29 @@ class TokenService:
     """Класс сервиса токенов"""
     repository: TokenRepository
 
-    async def create_access_token(self):
+    async def create_access_token(self, user_role: str):
         """Создание access токена"""
-        new_access_token = await self.repository.create_access_token()
-        return new_access_token
+        data = {}
+        expire = datetime.utcnow() + timedelta(minutes=30)
+        random_string = random.choices(string.printable, k=10)
+        data.update({"user_email": self.repository.login_schemas.email, "user_role": user_role,
+                     "random": random_string, "token_type": "bearer"})
+        encoded_jwt = jwt.encode(data, settings.jwt_settings.jwt_secret,
+                                 algorithm=settings.jwt_settings.jwt_algorithm)
+        new_token = TokenModel(token=encoded_jwt, expire=expire)
+        await self.repository.session_service.create_object(save_object=new_token)
+        return new_token
 
     async def login(self):
         """Авторизация"""
-        user = await self.repository.login()
-        return user
+        user = await self.repository.find_user_by_email()
+        if not user:
+            raise BadCredentials
+        vault_repository = VaultService()
+        password_from_vault = await vault_repository.read_secret(user_id=user.id)
+        password = await verify_password(plain_password=self.repository.login_schemas.password,
+                                         password=password_from_vault)
+        if not password:
+            raise BadCredentials
+        access_token = await self.create_access_token(user_role=user.role)
+        return {"access_token": access_token.token, "token_type": "Bearer"}
