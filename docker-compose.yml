@@ -45,8 +45,8 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./
-          target: /
+          path: src/authorization
+          target: src/authorization
           ignore:
             - .git
             - .github
@@ -54,6 +54,21 @@ services:
             - .venv
             - .gitignore
             - README.md
+        - action: sync
+          path: /src/authorization
+          target: src/authorization
+        - action: sync
+          path: /src/registration
+          target: src/registration
+        - action: sync
+          path: /src/settings
+          target: src/settings
+        - action: sync
+          path:  /src/vault
+          target: src/vault
+        - action: sync
+          path: main.py
+          target: main.py
         - action: rebuild
           path: pyproject.toml
 
