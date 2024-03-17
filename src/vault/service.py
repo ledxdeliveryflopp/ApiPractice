@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 import hvac
-from hvac.exceptions import InvalidPath, VaultDown
+import hvac.exceptions
 from src.settings.exceptions import VaultInvalidPath, VaultInvalidSealed
 from src.settings.settings import settings
 
 
 @dataclass
-class VaultRepository:
+class VaultService:
     client = hvac.Client(
         url=settings.vault_settings.vault_url,
         token=settings.vault_settings.vault_token_app,
@@ -21,7 +21,7 @@ class VaultRepository:
                 secret=dict(password=f"{password}"),
             )
             return new_secret
-        except VaultDown:
+        except hvac.exceptions.VaultDown:
             raise VaultInvalidSealed
 
     async def read_secret(self, user_id: int):
@@ -31,5 +31,5 @@ class VaultRepository:
                 mount_point=settings.vault_settings.vault_mount, path=f'{user_id}-secret-password')
             secret = secret_by_vault["data"]["data"]["password"]
             return secret
-        except InvalidPath:
+        except hvac.exceptions.InvalidPath:
             raise VaultInvalidPath
