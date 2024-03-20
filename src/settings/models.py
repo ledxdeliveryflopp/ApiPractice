@@ -8,3 +8,5 @@ class DefaultModel(Base):
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True, index=True)
     created_at = Column(DateTime, server_default=func.now())
+
+

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
+from fastapi.security import HTTPBearer
 from src.authorization.depends import get_token_service
-from src.authorization.schemas import TokenBaseSchemas
+from src.authorization.schemas import TokenBaseSchemas, LoginSchemas
 from src.authorization.service import TokenService
 
 
@@ -10,8 +11,12 @@ authorization_router = APIRouter(
 )
 
 
+bearer_token = HTTPBearer()
+
+
 @authorization_router.post('/login/', response_model=TokenBaseSchemas)
-async def login_router(token: TokenService = Depends(get_token_service)):
+async def login_router(login_schemas: LoginSchemas, token_service: TokenService = Depends(
+                       get_token_service)):
     """Роутер авторизации"""
-    new_token = await token.login()
+    new_token = await token_service.login(login_schemas=login_schemas)
     return new_token

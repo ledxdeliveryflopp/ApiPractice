@@ -2,20 +2,6 @@ version: "3.8"
 
 services:
 
-  database:
-    container_name: database
-    image: postgres
-    restart: always
-    env_file:
-      - .env
-    volumes:
-    - database:/data/
-    ports:
-    - "5432:5432"
-    networks:
-      - sql
-
-
   vault:
     image: library/vault:1.13.3
     container_name: vault
@@ -42,41 +28,14 @@ services:
     networks:
       - sql
       - vault
-    develop:
-      watch:
-        - action: sync
-          path: src/authorization
-          target: src/authorization
-          ignore:
-            - .git
-            - .github
-            - .idea
-            - .venv
-            - .gitignore
-            - README.md
-        - action: sync
-          path: /src/authorization
-          target: src/authorization
-        - action: sync
-          path: /src/registration
-          target: src/registration
-        - action: sync
-          path: /src/settings
-          target: src/settings
-        - action: sync
-          path:  /src/vault
-          target: src/vault
-        - action: sync
-          path: main.py
-          target: main.py
-        - action: rebuild
-          path: pyproject.toml
-
+      - nginx
 
 networks:
     sql:
       external: true
     vault:
+    nginx:
+      external: true
 
 volumes:
   database:
