@@ -43,12 +43,28 @@ class VaultSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
+class BrokerSettings(BaseSettings):
+    """Настройки для RabbitMQ"""
+    broker_username: str
+    broker_password: str
+    broker_host: str
+    broker_port: str
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    @property
+    def broker_full_url(self) -> str:
+        return (f"amqp://{self.broker_username}:{self.broker_password}@"
+                f"{self.broker_host}:{self.broker_port}")
+
+
 class Settings(BaseSettings):
     """Все настройки"""
     jwt_settings: JwtSettings
     sql_settings: SqlSettings
     url_settings: UrlSettings
     vault_settings: VaultSettings
+    broker_settings: BrokerSettings
 
 
 @lru_cache()
@@ -56,7 +72,7 @@ def init_settings():
     """Инициализация настроек"""
     all_settings = Settings(jwt_settings=JwtSettings(), sql_settings=SqlSettings(),
                             url_settings=UrlSettings(),
-                            vault_settings=VaultSettings())
+                            vault_settings=VaultSettings(), broker_settings=BrokerSettings())
     return all_settings
 
 
