@@ -53,3 +53,13 @@ class TokenExpire(DetailedHTTPException):
 class EmptyAuthorizationHeader(DetailedHTTPException):
     status_code = status.HTTP_401_UNAUTHORIZED
     detail = "Empty authorization header."
+
+
+class BadCode(DetailedHTTPException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Code don't exist."
+
+
+class BadVerifyToken(DetailedHTTPException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Code not for this user."

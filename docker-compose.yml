@@ -17,7 +17,6 @@ services:
     networks:
       - vault
 
-
   authorization_app:
     container_name: authorization
     build:
@@ -39,7 +38,7 @@ services:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
     volumes:
-      - ./rabbitmq:/var/lib/rabbitmq
+      - broker:/data/
     ports:
       - 15672:15672
       - 5672:5672
@@ -50,10 +49,11 @@ networks:
     sql:
       external: true
     vault:
+      external: true
     nginx:
       external: true
     rabbit:
       external: true
 
 volumes:
-  database:
+  broker:

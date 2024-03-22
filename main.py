@@ -4,6 +4,7 @@ from sqlalchemy import inspect
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.middleware.cors import CORSMiddleware
 from src.authorization.router import authorization_router
+from src.password.router import password_router
 from src.registration.models import UserModel, Role
 from src.registration.router import register_router
 from src.registration.utils import hash_password
@@ -31,13 +32,15 @@ authorization.add_middleware(
 
 authorization.include_router(authorization_router)
 authorization.include_router(register_router)
+authorization.include_router(password_router)
 
 
 async def init_tables():
     async with engine.begin() as conn:
         user_table = await conn.run_sync(lambda sync_conn: inspect(sync_conn).has_table("user"))
         token_table = await conn.run_sync(lambda sync_conn: inspect(sync_conn).has_table("token"))
-        if not user_table or not token_table:
+        code_table = await conn.run_sync(lambda sync_conn: inspect(sync_conn).has_table("code"))
+        if not user_table or not token_table or not code_table:
             await conn.run_sync(Base.metadata.create_all)
         else:
             pass
