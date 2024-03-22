@@ -29,12 +29,30 @@ services:
       - sql
       - vault
       - nginx
+      - rabbit
+
+  rabbitmq:
+    image: rabbitmq:3.10.7-management
+    container_name: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - rabbit
 
 networks:
     sql:
       external: true
     vault:
     nginx:
+      external: true
+    rabbit:
       external: true
 
 volumes:
