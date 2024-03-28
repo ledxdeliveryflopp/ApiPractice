@@ -1,7 +1,3 @@
-import sqlalchemy
-from fastapi import FastAPI
-from sqlalchemy import inspect
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.middleware.cors import CORSMiddleware
 from src.authorization.router import authorization_router
 from src.password.router import password_router
