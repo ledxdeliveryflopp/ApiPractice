@@ -4,9 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from src.settings.settings import settings
 
 engine = create_async_engine(
-    url=f"postgresql+asyncpg://{settings.sql_settings.sql_user}:"
-        f"{settings.sql_settings.sql_password}@{settings.sql_settings.sql_host}:"
-        f"{settings.sql_settings.sql_port}/{settings.sql_settings.sql_name}",
+    url=settings.sql_settings.db_full_url,
     echo=False
 )
 

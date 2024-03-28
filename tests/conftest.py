@@ -6,14 +6,13 @@ import pytest_asyncio
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from src.registration.models import UserModel
+from src.registration.models import UserModel # noqa
 from src.registration.repository import UserRepository
 from src.registration.schemas import UserCreateSchemas
 from src.registration.service import UserService
-from src.registration.utils import hash_password
-from src.settings.db import Base
+from src.registration.utils import hash_password # noqa
+from src.settings.db import Base # noqa
 from src.settings.settings import settings
-from src.vault.service import client
 
 
 @pytest.fixture(scope="session", autouse=True)

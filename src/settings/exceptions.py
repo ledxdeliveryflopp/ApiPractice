@@ -38,3 +38,28 @@ class VaultInvalidSealed(DetailedHTTPException):
     """Хранилище vault не открыто"""
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Vault sealed, report a problem to technical support."
+
+
+class TokenDontExist(DetailedHTTPException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Token don't exist."
+
+
+class TokenExpire(DetailedHTTPException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Token date expire."
+
+
+class EmptyAuthorizationHeader(DetailedHTTPException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    detail = "Empty authorization header."
+
+
+class BadCode(DetailedHTTPException):
+    status_code = status.HTTP_404_NOT_FOUND
+    detail = "Code don't exist."
+
+
+class BadVerifyToken(DetailedHTTPException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Code not for this user."

@@ -1,56 +1,27 @@
 from dataclasses import dataclass
-from datetime import datetime, timedelta
-import random
-import string
-from jose import jwt
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
 from src.authorization.models import TokenModel
-from src.authorization.schemas import LoginSchemas
-from src.authorization.utils import verify_password
 from src.registration.models import UserModel
-from src.settings.exceptions import BadCredentials
-from src.settings.repository import SessionRepository
-from src.settings.settings import settings
-from src.vault.repository import VaultRepository
+from src.settings.exceptions import TokenDontExist
+from src.settings.service import SessionService
 
 
 @dataclass(repr=False, eq=False)
 class TokenRepository:
     """Класс для взаимодействия с БД для токенов"""
-    login_schemas: LoginSchemas
-    session: AsyncSession
+    session_service: SessionService
+    request: Request
 
-    async def find_user_by_email(self):
+    async def find_user_by_email(self, email: str):
         """Поиск пользователя по email"""
-        user = await self.session.execute(select(UserModel).filter
-                                          ((UserModel.email == self.login_schemas.email)))
-        return user.scalar()
+        user = await self.session_service.get_object_by_parameter(model=UserModel,
+                                                                  email=email)
+        return user
 
-    async def create_access_token(self):
-        """Создание access токена"""
-        data = {}
-        expire = datetime.utcnow() + timedelta(minutes=30)
-        random_string = random.choices(string.printable, k=10)
-        data.update({"user_email": self.login_schemas.email, "random":
-                    random_string, "token_type": "bearer"})
-        encoded_jwt = jwt.encode(data, settings.jwt_settings.jwt_secret,
-                                 algorithm=settings.jwt_settings.jwt_algorithm)
-        new_token = TokenModel(token=encoded_jwt, expire=expire)
-        session_create = SessionRepository(session=self.session, object=new_token)
-        await session_create.session_add()
-        return new_token
+    async def find_token(self, jwt_token: str):
+        """Поиск токена"""
+        token = await self.session_service.get_token(model=TokenModel, token=jwt_token)
+        if not token:
+            raise TokenDontExist
+        return token
 
-    async def login(self):
-        """Авторизация"""
-        user = await self.find_user_by_email()
-        if not user:
-            raise BadCredentials
-        vault_repository = VaultRepository()
-        password_from_vault = await vault_repository.read_secret(user_id=user.id)
-        password = await verify_password(plain_password=self.login_schemas.password,
-                                         password=password_from_vault)
-        if not password:
-            raise BadCredentials
-        access_token = await self.create_access_token()
-        return {"access_token": access_token.token, "token_type": "Bearer"}
