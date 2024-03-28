@@ -29,21 +29,38 @@ services:
       - vault
       - nginx
       - rabbit
+    develop:
+      watch:
+        - action: sync
+          path: src/
+          target: src/
 
-  rabbitmq:
-    image: rabbitmq:3.10.7-management
-    container_name: rabbitmq
-    restart: always
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    volumes:
-      - broker:/data/
-    ports:
-      - 15672:15672
-      - 5672:5672
-    networks:
-      - rabbit
+        - action: sync
+          path: vault/
+          target: vault/
+
+        - action: sync
+          path: migrations/
+          target: migrations/
+
+        - action: sync
+          path: ./
+          target: ./
+          ignore:
+            - src/
+            - migrations/
+            - vault/
+            - .idea
+            - .venv
+            - .gitignore
+            - README.md
+            - docker-compose.yml
+            - Dockerfile
+            - poetry.lock
+            - pyproject.toml
+
+        - action: rebuild
+          path: pyproject.toml
 
 networks:
     sql:
@@ -54,6 +71,3 @@ networks:
       external: true
     rabbit:
       external: true
-
-volumes:
-  broker:

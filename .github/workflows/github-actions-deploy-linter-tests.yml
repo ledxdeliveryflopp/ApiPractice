@@ -13,22 +13,35 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Build docker network
+      - name: Build docker sql network
         run: docker network create sql
+      - name: Build docker vault network
+        run: docker network create vault
+      - name: Build docker nginx network
+        run: docker network create nginx
+      - name: Build docker rabbit network
+        run: docker network create rabbit
       - name: Build docker container
-        run: docker-compose up -d
+        run: docker-compose -f docker-compose-github.yml up -d --build
       - name: Check running containers
         run: docker ps -a
 
-#  Linter:
-#    needs: Deploy
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#      - name: Build docker network
-#        run: docker network create sql
-#      - name: Build docker container
-#        run: docker-compose up -d
-#      - name: Check code by linter
-#        run: docker exec authorization ruff check
+  Linter:
+    needs: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build docker network
+      - name: Build docker sql network
+        run: docker network create sql
+      - name: Build docker vault network
+        run: docker network create vault
+      - name: Build docker nginx network
+        run: docker network create nginx
+      - name: Build docker rabbit network
+        run: docker network create rabbit
+      - name: Build docker container
+        run: docker-compose -f docker-compose-github.yml up -d --build
+      - name: Check code by linter
+        run: docker exec authorization ruff check

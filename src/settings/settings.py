@@ -12,26 +12,18 @@ class JwtSettings(BaseSettings):
 
 class SqlSettings(BaseSettings):
     """Настройки для БД"""
-    sql_user: str
-    sql_password: str
-    sql_host: str
-    sql_port: str
-    sql_name: str
+    postgres_user: str
+    postgres_password: str
+    postgres_host: str
+    postgres_port: str
+    postgres_db: str
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     @property
     def db_full_url(self) -> str:
-        return (f"postgresql+asyncpg://{self.sql_user}:{self.sql_password}@"
-                f"{self.sql_host}:{self.sql_port}/{self.sql_name}")
-
-
-class UrlSettings(BaseSettings):
-    """Настройки url для тестов"""
-    auth_url: str
-    register_url: str
-
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+        return (f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@"
+                f"{self.postgres_host}:{self.postgres_port}/{self.postgres_db}")
 
 
 class VaultSettings(BaseSettings):
@@ -56,6 +48,14 @@ class BrokerSettings(BaseSettings):
     def broker_full_url(self) -> str:
         return (f"amqp://{self.broker_username}:{self.broker_password}@"
                 f"{self.broker_host}:{self.broker_port}")
+
+
+class UrlSettings(BaseSettings):
+    """Настройки url для тестов"""
+    auth_url: str
+    register_url: str
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 class Settings(BaseSettings):

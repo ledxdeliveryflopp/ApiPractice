@@ -1,12 +1,8 @@
 from dataclasses import dataclass
-from datetime import datetime
-
-from starlette import status
 from starlette.requests import Request
 from src.authorization.models import TokenModel
-from src.authorization.schemas import LoginSchemas
 from src.registration.models import UserModel
-from src.settings.exceptions import TokenDontExist, TokenExpire
+from src.settings.exceptions import TokenDontExist
 from src.settings.service import SessionService
 
 
