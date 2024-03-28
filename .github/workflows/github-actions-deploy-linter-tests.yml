@@ -2,7 +2,7 @@ name: "Python CI"
 on:
 
   push:
-    branches: ["master", "vault_integrations"]
+    branches: ["master"]
   pull_request:
     branches: ["master"]
 
