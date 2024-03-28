@@ -13,7 +13,7 @@ origins = [
     "http://localhost:5000",
 ]
 
-payment.add_middleware(
+authorization.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
