@@ -3,7 +3,7 @@ import aio_pika
 from src.settings.settings import settings
 
 
-async def send_message_to_broker(email: str) -> dict:
+async def send_message_to_broker(email: str):
     connection = await aio_pika.connect_robust(url=settings.broker_settings.broker_full_url)
     async with connection:
         routing_key = "email_register_queue"

@@ -19,7 +19,7 @@ class SessionRepository(ABC):
         except IntegrityError:
             await self.session.rollback()
 
-    async def session_delete(self, delete_object) -> object:
+    async def session_delete(self, delete_object) -> dict:
         """Удаление объекта из БД"""
         try:
             await self.session.delete(instance=delete_object)

@@ -7,12 +7,13 @@ from src.settings.settings import settings
 
 @dataclass
 class VaultService:
+    """Сервис для взаимодействия с Vault"""
     client = hvac.Client(
         url=settings.vault_settings.vault_url,
         token=settings.vault_settings.vault_token_app,
     )
 
-    async def create_secret(self, user_id: int, password: str):
+    async def create_secret(self, user_id: int, password: str) -> object:
         """Сохранение секрета в vault"""
         try:
             new_secret = self.client.secrets.kv.v2.create_or_update_secret(
@@ -24,7 +25,7 @@ class VaultService:
         except hvac.exceptions.VaultDown:
             raise VaultInvalidSealed
 
-    async def read_secret(self, user_id: int):
+    async def read_secret(self, user_id: int) -> object:
         """Чтение секрета из vault"""
         try:
             secret_by_vault = self.client.secrets.kv.read_secret_version(
@@ -33,3 +34,9 @@ class VaultService:
             return secret
         except hvac.exceptions.InvalidPath:
             raise VaultInvalidPath
+
+
+async def get_vault_service():
+    """Инициализация репозитория сервисов Vault"""
+    vault_service = VaultService()
+    return vault_service

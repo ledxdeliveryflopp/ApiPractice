@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from sqlalchemy import Select
-from sqlalchemy.ext.asyncio import AsyncSession
 from src.password.models import EmailCode
 from src.registration.models import UserModel
 from src.settings.exceptions import UserDontExist, BadCode
+from src.settings.service import SessionService
 
 
 @dataclass
-class PasswordRepository:
-    session: AsyncSession
+class PasswordRepository(SessionService):
+    """Репозиторий кодов для сброса пароля"""
 
     async def get_user_by_email(self, email: str) -> UserModel:
         """Получить пользователя по Email"""

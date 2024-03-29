@@ -1,17 +1,14 @@
 from dataclasses import dataclass
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.requests import Request
 from src.authorization.models import TokenModel
 from src.registration.models import UserModel
 from src.settings.exceptions import TokenDontExist
+from src.settings.service import SessionService
 
 
 @dataclass(repr=False, eq=False)
-class TokenRepository:
+class TokenRepository(SessionService):
     """Класс для взаимодействия с БД для токенов"""
-    session: AsyncSession
-    request: Request
 
     async def find_user_by_email(self, email: str) -> UserModel:
         """Поиск пользователя по email"""
