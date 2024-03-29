@@ -17,7 +17,7 @@ class PasswordService:
     password_repository: PasswordRepository
     session_service: SessionService
 
-    async def send_code_for_change_password(self, user_schemas: UserBaseSchemas):
+    async def send_code_for_change_password(self, user_schemas: UserBaseSchemas) -> dict:
         """Отправить код для подтверждения смены пароля"""
         user = await self.password_repository.get_user_by_email(email=user_schemas.email)
         if not user:
@@ -33,7 +33,7 @@ class PasswordService:
         await self.session_service.create_object(save_object=code_in_db)
         return {"detail": f"Code send to {user.email}"}
 
-    async def change_password(self, user_schemas: UserChangePasswordSchemas):
+    async def change_password(self, user_schemas: UserChangePasswordSchemas) -> dict:
         """Проверить код и сменить пароль"""
         code = await self.password_repository.find_code(code=user_schemas.code)
         if not code:

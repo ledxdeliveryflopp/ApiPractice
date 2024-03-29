@@ -43,8 +43,6 @@ async def init_tables():
         code_table = await conn.run_sync(lambda sync_conn: inspect(sync_conn).has_table("code"))
         if not user_table or not token_table or not code_table:
             await conn.run_sync(Base.metadata.create_all)
-        else:
-            pass
 
 
 async def init_admin_and_manager():

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from fastapi import BackgroundTasks
 from src.broker.service import send_message_to_broker
+from src.registration.models import UserModel
 from src.registration.repository import UserRepository
 
 
@@ -10,12 +11,12 @@ class UserService:
     repository: UserRepository
     background_tasks: BackgroundTasks
 
-    async def find_user_by_email(self):
+    async def find_user_by_email(self) -> UserModel:
         """Поиск пользователя по email"""
         user = await self.repository.find_user()
         return user
 
-    async def create_user(self):
+    async def create_user(self) -> UserModel:
         """Создание пользователя"""
         new_user = await self.repository.create_user()
         self.background_tasks.add_task(send_message_to_broker, email=f"{new_user.email}")

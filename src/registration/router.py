@@ -12,5 +12,4 @@ register_router = APIRouter(
 @register_router.post('/register/', response_model=UserBaseSchemas)
 async def create_user_router(user: UserService = Depends(get_user_service)):
     """Роутер создания пользователя"""
-    new_user = await user.create_user()
-    return new_user
+    return await user.create_user()

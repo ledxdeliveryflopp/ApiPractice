@@ -36,6 +36,30 @@ services:
           target: src/
 
         - action: sync
+          path: src/authorization
+          target: src/authorization
+
+        - action: sync
+          path: src/broker
+          target: src/broker
+
+        - action: sync
+          path: src/password
+          target: src/password
+
+        - action: sync
+          path: src/registration
+          target: src/registration
+
+        - action: sync
+          path: src/settings
+          target: src/settings
+
+        - action: sync
+          path: src/vault
+          target: src/vault
+
+        - action: sync
           path: vault/
           target: vault/
 

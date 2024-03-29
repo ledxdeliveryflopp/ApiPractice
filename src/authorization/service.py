@@ -8,6 +8,7 @@ from src.authorization.repository import TokenRepository
 from src.authorization.schemas import LoginSchemas
 from src.authorization.utils import verify_password
 from src.settings.exceptions import BadCredentials
+from src.settings.service import SessionService
 from src.settings.settings import settings
 from src.vault.service import VaultService
 
@@ -16,8 +17,9 @@ from src.vault.service import VaultService
 class TokenService:
     """Класс сервиса токенов"""
     repository: TokenRepository
+    session_service: SessionService
 
-    async def create_access_token(self, user_role: str, email: str):
+    async def create_access_token(self, user_role: str, email: str) -> TokenModel:
         """Создание access токена"""
         data = {}
         expire = datetime.utcnow() + timedelta(minutes=30)
@@ -27,10 +29,10 @@ class TokenService:
         encoded_jwt = jwt.encode(data, settings.jwt_settings.jwt_secret,
                                  algorithm=settings.jwt_settings.jwt_algorithm)
         new_token = TokenModel(token=encoded_jwt, expire=expire)
-        await self.repository.session_service.create_object(save_object=new_token)
+        await self.session_service.create_object(save_object=new_token)
         return new_token
 
-    async def login(self, login_schemas: LoginSchemas):
+    async def login(self, login_schemas: LoginSchemas) -> dict:
         """Авторизация"""
         user = await self.repository.find_user_by_email(email=login_schemas.email)
         if not user:
