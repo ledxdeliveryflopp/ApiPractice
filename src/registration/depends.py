@@ -7,7 +7,7 @@ from src.vault.service import VaultService, get_vault_service
 
 async def get_user_service(background_tasks: BackgroundTasks,
                            session: AsyncSession = Depends(get_session),
-                           vault_service: VaultService = Depends(get_vault_service)):
+                           vault_service: VaultService = Depends(get_vault_service)) -> object:
     """Инициализация сервиса пользователей"""
     user_service = UserService(background_tasks=background_tasks, vault_service=vault_service,
                                session=session)

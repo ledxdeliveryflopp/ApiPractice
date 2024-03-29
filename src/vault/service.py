@@ -36,7 +36,7 @@ class VaultService:
             raise VaultInvalidPath
 
 
-async def get_vault_service():
+async def get_vault_service() -> object:
     """Инициализация репозитория сервисов Vault"""
     vault_service = VaultService()
     return vault_service

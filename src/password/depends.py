@@ -6,7 +6,7 @@ from src.vault.service import VaultService, get_vault_service
 
 
 async def get_password_service(session: AsyncSession = Depends(get_session),
-                               vault_service: VaultService = Depends(get_vault_service)):
+                               vault_service: VaultService = Depends(get_vault_service)) -> object:
     """Инициализация репозитория паролей и сервисов паролей"""
     password_service = PasswordService(session=session, vault_service=vault_service)
     return password_service
