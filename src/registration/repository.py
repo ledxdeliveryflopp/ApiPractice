@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from src.registration.models import UserModel
 from src.registration.schemas import UserCreateSchemas
 from src.settings.service import SessionService
