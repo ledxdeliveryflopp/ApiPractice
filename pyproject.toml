@@ -29,10 +29,11 @@ pytest-mock-resources = "^2.10.1"
 aio-pika = "^9.4.1"
 mypy = "^1.9.0"
 pre-commit = "^3.7.0"
+ruff = "^0.3.7"
 
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.2.1"
+ruff = "^0.3.7"
 flake8-async = "^22.11.14"
 pre-commit = "^3.7.0"
 
@@ -40,13 +41,6 @@ pre-commit = "^3.7.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-
-[tool.ruff]
-exclude = ["usr", "venv", "tmp", "var"]
-line-length = 88
-indent-width = 4
-target-version = "py311"
 
 
 [tool.pytest.ini_options]

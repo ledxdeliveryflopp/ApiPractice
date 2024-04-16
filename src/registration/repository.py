@@ -12,5 +12,7 @@ class UserRepository(SessionService):
     async def find_user(self, user_schemas: UserCreateSchemas) -> UserModel | None:
         """Поиск пользователя по email"""
         user = await self.session.execute(select(UserModel).filter(UserModel.email ==
-                                                                   user_schemas.email))
+                                                                   user_schemas.email,
+                                                                   UserModel.username ==
+                                                                   user_schemas.username))
         return user.scalar()
