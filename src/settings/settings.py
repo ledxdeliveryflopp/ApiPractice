@@ -68,7 +68,7 @@ class Settings(BaseSettings):
 
 
 @lru_cache()
-def init_settings():
+def init_settings() -> object:
     """Инициализация настроек"""
     all_settings = Settings(jwt_settings=JwtSettings(), sql_settings=SqlSettings(),
                             url_settings=UrlSettings(),

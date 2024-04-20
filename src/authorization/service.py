@@ -13,11 +13,11 @@ from src.vault.service import VaultService
 
 
 @dataclass(repr=False, eq=False)
-class TokenService:
+class TokenService(TokenRepository):
     """Класс сервиса токенов"""
-    repository: TokenRepository
+    _vault_service: VaultService
 
-    async def create_access_token(self, user_role: str, email: str):
+    async def create_access_token(self, user_role: str, email: str) -> TokenModel:
         """Создание access токена"""
         data = {}
         expire = datetime.utcnow() + timedelta(minutes=30)
@@ -27,16 +27,15 @@ class TokenService:
         encoded_jwt = jwt.encode(data, settings.jwt_settings.jwt_secret,
                                  algorithm=settings.jwt_settings.jwt_algorithm)
         new_token = TokenModel(token=encoded_jwt, expire=expire)
-        await self.repository.session_service.create_object(save_object=new_token)
+        await self.create_object(save_object=new_token)
         return new_token
 
-    async def login(self, login_schemas: LoginSchemas):
+    async def login(self, login_schemas: LoginSchemas) -> dict:
         """Авторизация"""
-        user = await self.repository.find_user_by_email(email=login_schemas.email)
+        user = await self.find_user_by_email(email=login_schemas.email)
         if not user:
             raise BadCredentials
-        vault_repository = VaultService()
-        password_from_vault = await vault_repository.read_secret(user_id=user.id)
+        password_from_vault = await self._vault_service.read_secret(user_id=user.id)
         password = await verify_password(plain_password=login_schemas.password,
                                          password=password_from_vault)
         if not password:

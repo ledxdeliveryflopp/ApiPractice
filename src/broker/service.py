@@ -13,7 +13,6 @@ async def send_message_to_broker(email: str):
 
         await channel.default_exchange.publish(aio_pika.Message(body=email.encode()),
                                                routing_key=routing_key)
-    return {"detail": "success"}
 
 
 async def send_reset_code_to_broker(data: dict):
@@ -26,4 +25,3 @@ async def send_reset_code_to_broker(data: dict):
         send_data = json.dumps(data)
         await channel.default_exchange.publish(aio_pika.Message(body=send_data.encode()),
                                                routing_key=routing_key)
-    return {"detail": "success"}

@@ -1,14 +1,12 @@
 from fastapi import Depends
-from starlette.requests import Request
-from src.authorization.repository import TokenRepository
+from sqlalchemy.ext.asyncio import AsyncSession
 from src.authorization.service import TokenService
-from src.settings.depends import get_project_service
-from src.settings.service import SessionService
+from src.settings.depends import get_session
+from src.vault.service import VaultService, get_vault_service
 
 
-async def get_token_service(request: Request, session_service:
-                            SessionService = Depends(get_project_service)):
-    """Инициализация репозитория токенов и сервисов токенов"""
-    token_repository = TokenRepository(session_service=session_service, request=request)
-    token_service = TokenService(repository=token_repository)
+async def get_token_service(session: AsyncSession = Depends(get_session),
+                            vault_service: VaultService = Depends(get_vault_service)) -> object:
+    """Инициализация сервиса токенов"""
+    token_service = TokenService(session=session, _vault_service=vault_service)
     return token_service

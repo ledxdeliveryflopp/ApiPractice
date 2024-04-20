@@ -16,7 +16,6 @@ bearer_token = HTTPBearer()
 
 @authorization_router.post('/login/', response_model=TokenBaseSchemas)
 async def login_router(login_schemas: LoginSchemas, token_service: TokenService = Depends(
-                       get_token_service)):
+                       get_token_service)) -> dict:
     """Роутер авторизации"""
-    new_token = await token_service.login(login_schemas=login_schemas)
-    return new_token
+    return await token_service.login(login_schemas=login_schemas)
